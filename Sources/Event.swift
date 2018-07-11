@@ -419,6 +419,18 @@ extension Signal.Event {
 			}
 		}
 	}
+	
+	internal static func take(through shouldComplete: @escaping (Value) -> Bool) -> Transformation<Value, Error> {
+		return { action, _ in
+			return { event in
+				if let value = event.value, shouldComplete(value) {
+					action(.completed)
+				} else {
+					action(event)
+				}
+			}
+		}
+	}
 
 	internal static func skip(first count: Int) -> Transformation<Value, Error> {
 		precondition(count > 0)

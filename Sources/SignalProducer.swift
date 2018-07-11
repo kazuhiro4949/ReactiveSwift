@@ -1550,6 +1550,18 @@ extension SignalProducer {
 	public func take(while shouldContinue: @escaping (Value) -> Bool) -> SignalProducer<Value, Error> {
 		return core.flatMapEvent(Signal.Event.take(while: shouldContinue))
 	}
+	
+	/// Forward any values from `self` until `shouldComplete` returns `true`, at which
+	/// point the produced `Signal` would complete.
+	///
+	/// - parameters:
+	///   - shouldComplete: A closure to determine whether the forwarding of values should
+	///                     complete.
+	///
+	/// - returns: A producer which conditionally forwards values from `self`.
+	public func take(through shouldComplete: @escaping (Value) -> Bool) -> SignalProducer<Value, Error> {
+		return core.flatMapEvent(Signal.Event.take(while: shouldComplete))
+	}
 
 	/// Zip elements of two producers into pairs. The elements of any Nth pair
 	/// are the Nth elements of the two input producers.
